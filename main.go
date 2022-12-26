@@ -1,11 +1,24 @@
 package main
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/bagashiz/pustaka-api/handler"
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func main() {
+	dsn := "host=localhost user=root password=password dbname=pustaka_api port=5432 sslmode=disable TimeZone=Asia/Jakarta"
+	_, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatal("db connection error")
+	}
+
+	fmt.Println("database connection succeed")
+
 	router := gin.Default()
 
 	v1 := router.Group("/v1")
