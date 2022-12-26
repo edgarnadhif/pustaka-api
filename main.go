@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/bagashiz/pustaka-api/book"
@@ -18,6 +19,21 @@ func main() {
 	}
 
 	db.AutoMigrate(&book.Book{})
+
+	//* CRUD
+
+	// CREATE
+	book := book.Book{}
+	book.Title = "Clean Coder"
+	book.Price = 35
+	book.Discount = 5
+	book.Rating = 5
+	book.Description = "2nd best programming book."
+
+	err = db.Create(&book).Error
+	if err != nil {
+		fmt.Printf("error creating book record: %v\n", err)
+	}
 
 	router := gin.Default()
 
