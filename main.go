@@ -5,14 +5,19 @@ import (
 
 	"github.com/bagashiz/pustaka-api/book"
 	"github.com/bagashiz/pustaka-api/handler"
+	"github.com/bagashiz/pustaka-api/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func main() {
-	dsn := "host=localhost user=root password=password dbname=pustaka_api port=5432 sslmode=disable TimeZone=Asia/Jakarta"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	config, err := utils.LoadConfig(".")
+	if err != nil {
+		log.Fatal("cannot load config")
+	}
+
+	db, err := gorm.Open(postgres.Open(config.DSN), &gorm.Config{})
 	if err != nil {
 		log.Fatal("db connection error")
 	}
@@ -36,5 +41,5 @@ func main() {
 
 	v1.DELETE("/books/:id", bookHandler.DeleteBook)
 
-	router.Run(":8888")
+	router.Run(config.HTTPServerAddress)
 }
