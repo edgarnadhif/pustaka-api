@@ -20,55 +20,35 @@ func main() {
 
 	db.AutoMigrate(&book.Book{})
 
-	//* CRUD
-	var books []book.Book
-	var book book.Book
+	bookRepo := book.NewRepository(db)
 
-	// CREATE
-	book.Title = "Clean Code"
-	book.Price = 40
-	book.Discount = 10
-	book.Rating = 5
-	book.Description = "The best programming book."
-
-	err = db.Debug().Create(&book).Error
-	if err != nil {
-		fmt.Printf("error creating book record: %v\n", err)
+	book := book.Book{
+		Title:       "The Pragmatic Engineer",
+		Description: "The 3rd best programming book.",
+		Price:       50,
+		Discount:    0,
+		Rating:      5,
 	}
 
-	// READ
-	err = db.Debug().First(&book).Error
+	_, err = bookRepo.Create(book)
 	if err != nil {
-		fmt.Printf("error finding book record: %v\n", err)
+		fmt.Printf("error creating data: %v\n", err)
 	}
 
-	fmt.Printf("Title\t: %v\nBook object: %v\n", book.Title, book)
-
-	err = db.Debug().Where("rating = ?", 5).Find(&books).Error
+	book, err = bookRepo.FindByID(14)
 	if err != nil {
-		fmt.Printf("error finding books record: %v\n", err)
+		fmt.Printf("error retrieving data: %v\n", err)
 	}
 
-	for _, b := range books {
-		fmt.Printf("Title\t: %v\nBook object: %v\n", b.Title, b)
+	fmt.Printf("Title\t: %v\n", book.Title)
+
+	books, err := bookRepo.FindAll()
+	if err != nil {
+		fmt.Printf("error retrieving data: %v\n", err)
 	}
 
-	// UPDATE
-	book.Title = "Clean Coder"
-	book.Price = 30
-	book.Discount = 15
-	book.Rating = 5
-	book.Description = "The 2nd best programming book."
-
-	err = db.Debug().Save(&book).Error
-	if err != nil {
-		fmt.Printf("error updating book record: %v\n", err)
-	}
-
-	// DELETE
-	err = db.Debug().Delete(&book).Error
-	if err != nil {
-		fmt.Printf("error deleting book record: %v\n", err)
+	for _, book := range books {
+		fmt.Printf("Title\t: %v\n", book.Title)
 	}
 
 	router := gin.Default()
