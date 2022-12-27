@@ -21,18 +21,36 @@ func main() {
 	db.AutoMigrate(&book.Book{})
 
 	//* CRUD
+	var books []book.Book
+	var book book.Book
 
 	// CREATE
-	book := book.Book{}
-	book.Title = "Clean Coder"
-	book.Price = 35
-	book.Discount = 5
+	book.Title = "Clean Code"
+	book.Price = 40
+	book.Discount = 10
 	book.Rating = 5
-	book.Description = "2nd best programming book."
+	book.Description = "The best programming book."
 
-	err = db.Create(&book).Error
+	err = db.Debug().Create(&book).Error
 	if err != nil {
 		fmt.Printf("error creating book record: %v\n", err)
+	}
+
+	// READ
+	err = db.Debug().First(&book).Error
+	if err != nil {
+		fmt.Printf("error finding book record: %v\n", err)
+	}
+
+	fmt.Printf("Title\t: %v\nBook object: %v\n", book.Title, book)
+
+	err = db.Debug().Where("rating = ?", 5).Find(&books).Error
+	if err != nil {
+		fmt.Printf("error finding books record: %v\n", err)
+	}
+
+	for _, b := range books {
+		fmt.Printf("Title\t: %v\nBook object: %v\n", b.Title, b)
 	}
 
 	router := gin.Default()
