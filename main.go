@@ -21,28 +21,26 @@ func main() {
 	db.AutoMigrate(&book.Book{})
 
 	bookRepo := book.NewRepository(db)
+	bookService := book.NewService(bookRepo)
 
-	book := book.Book{
-		Title:       "The Pragmatic Engineer",
-		Description: "The 3rd best programming book.",
-		Price:       50,
-		Discount:    0,
-		Rating:      5,
+	bookRequest := book.BookRequest{
+		Title: "The Pragmatic Engineer",
+		Price: "50",
 	}
 
-	_, err = bookRepo.Create(book)
+	_, err = bookService.Create(bookRequest)
 	if err != nil {
 		fmt.Printf("error creating data: %v\n", err)
 	}
 
-	book, err = bookRepo.FindByID(14)
+	book, err := bookService.FindByID(14)
 	if err != nil {
 		fmt.Printf("error retrieving data: %v\n", err)
 	}
 
 	fmt.Printf("Title\t: %v\n", book.Title)
 
-	books, err := bookRepo.FindAll()
+	books, err := bookService.FindAll()
 	if err != nil {
 		fmt.Printf("error retrieving data: %v\n", err)
 	}
