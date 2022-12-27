@@ -30,14 +30,7 @@ func (h *bookHandler) GetBook(ctx *gin.Context) {
 		return
 	}
 
-	bookResponse := book.BookResponse{
-		ID:          b.ID,
-		Title:       b.Title,
-		Description: b.Description,
-		Rating:      b.Rating,
-		Price:       b.Price,
-		Discount:    b.Discount,
-	}
+	bookResponse := convertToBookResponse(b)
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": bookResponse,
@@ -56,15 +49,7 @@ func (h *bookHandler) GetBooks(ctx *gin.Context) {
 	var booksResponse []book.BookResponse
 
 	for _, b := range books {
-		bookResponse := book.BookResponse{
-			ID:          b.ID,
-			Title:       b.Title,
-			Description: b.Description,
-			Rating:      b.Rating,
-			Price:       b.Price,
-			Discount:    b.Discount,
-		}
-
+		bookResponse := convertToBookResponse(b)
 		booksResponse = append(booksResponse, bookResponse)
 	}
 
@@ -73,7 +58,7 @@ func (h *bookHandler) GetBooks(ctx *gin.Context) {
 	})
 }
 
-func (h *bookHandler) PostBooksHandler(ctx *gin.Context) {
+func (h *bookHandler) CreateBook(ctx *gin.Context) {
 	var bookRequest book.BookRequest
 
 	err := ctx.ShouldBindJSON(&bookRequest)
@@ -102,4 +87,15 @@ func (h *bookHandler) PostBooksHandler(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": book,
 	})
+}
+
+func convertToBookResponse(b book.Book) book.BookResponse {
+	return book.BookResponse{
+		ID:          b.ID,
+		Title:       b.Title,
+		Description: b.Description,
+		Rating:      b.Rating,
+		Price:       b.Price,
+		Discount:    b.Discount,
+	}
 }
