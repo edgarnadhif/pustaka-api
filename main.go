@@ -53,6 +53,18 @@ func main() {
 		fmt.Printf("Title\t: %v\nBook object: %v\n", b.Title, b)
 	}
 
+	// UPDATE
+	book.Title = "Clean Coder"
+	book.Price = 30
+	book.Discount = 15
+	book.Rating = 5
+	book.Description = "The 2nd best programming book."
+
+	err = db.Debug().Save(&book).Error
+	if err != nil {
+		fmt.Printf("error updating book record: %v\n", err)
+	}
+
 	router := gin.Default()
 
 	v1 := router.Group("/v1")
