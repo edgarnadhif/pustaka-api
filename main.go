@@ -34,5 +34,7 @@ func main() {
 
 	v1.PUT("/books/:id", bookHandler.UpdateBook)
 
+	v1.DELETE("/books/:id", bookHandler.DeleteBook)
+
 	router.Run(":8888")
 }
