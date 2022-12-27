@@ -2,6 +2,7 @@ package book
 
 import "time"
 
+// Book contains attributes for Books table
 type Book struct {
 	ID          int
 	Title       string

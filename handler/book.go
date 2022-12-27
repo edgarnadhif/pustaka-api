@@ -10,14 +10,17 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+// bookHandler implements book.Service struct
 type bookHandler struct {
 	bookService book.Service
 }
 
+// NewBookHandler creates a new bookHandler instance
 func NewBookHandler(bookService book.Service) *bookHandler {
 	return &bookHandler{bookService}
 }
 
+// GetBook retrieves a single data from the Books table based on the requested ID
 func (h *bookHandler) GetBook(ctx *gin.Context) {
 	idString := ctx.Param("id")
 	id, _ := strconv.Atoi(idString)
@@ -37,6 +40,7 @@ func (h *bookHandler) GetBook(ctx *gin.Context) {
 	})
 }
 
+// GetBooks retrieves all data from the Books table
 func (h *bookHandler) GetBooks(ctx *gin.Context) {
 	books, err := h.bookService.FindAll()
 	if err != nil {
@@ -58,6 +62,7 @@ func (h *bookHandler) GetBooks(ctx *gin.Context) {
 	})
 }
 
+// CreateBook creates a new data to the Books table based on requested parameters
 func (h *bookHandler) CreateBook(ctx *gin.Context) {
 	var bookRequest book.BookRequest
 
@@ -91,6 +96,7 @@ func (h *bookHandler) CreateBook(ctx *gin.Context) {
 	})
 }
 
+// UpdateBook updates existing data from the Books table based on the requested parameters
 func (h *bookHandler) UpdateBook(ctx *gin.Context) {
 	var bookRequest book.BookRequest
 
@@ -127,6 +133,7 @@ func (h *bookHandler) UpdateBook(ctx *gin.Context) {
 	})
 }
 
+// DeleteBook removes data from the Books table based on requested id
 func (h *bookHandler) DeleteBook(ctx *gin.Context) {
 	idString := ctx.Param("id")
 	id, _ := strconv.Atoi(idString)
@@ -146,6 +153,7 @@ func (h *bookHandler) DeleteBook(ctx *gin.Context) {
 	})
 }
 
+// convertToBookResponse converts data from book.BookRequest struct to book.BookResponse struct
 func convertToBookResponse(b book.Book) book.BookResponse {
 	return book.BookResponse{
 		ID:          b.ID,
