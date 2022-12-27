@@ -32,5 +32,7 @@ func main() {
 
 	v1.POST("/books", bookHandler.CreateBook)
 
+	v1.PUT("/books/:id", bookHandler.UpdateBook)
+
 	router.Run(":8888")
 }
