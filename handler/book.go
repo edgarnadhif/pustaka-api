@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/bagashiz/pustaka-api/book"
 	"github.com/gin-gonic/gin"
@@ -15,6 +16,32 @@ type bookHandler struct {
 
 func NewBookHandler(bookService book.Service) *bookHandler {
 	return &bookHandler{bookService}
+}
+
+func (h *bookHandler) GetBook(ctx *gin.Context) {
+	idString := ctx.Param("id")
+	id, _ := strconv.Atoi(idString)
+
+	b, err := h.bookService.FindByID(id)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"errors": err,
+		})
+		return
+	}
+
+	bookResponse := book.BookResponse{
+		ID:          b.ID,
+		Title:       b.Title,
+		Description: b.Description,
+		Rating:      b.Rating,
+		Price:       b.Price,
+		Discount:    b.Discount,
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": bookResponse,
+	})
 }
 
 func (h *bookHandler) GetBooks(ctx *gin.Context) {
