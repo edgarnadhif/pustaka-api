@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/bagashiz/pustaka-api/book"
@@ -22,43 +21,18 @@ func main() {
 
 	bookRepo := book.NewRepository(db)
 	bookService := book.NewService(bookRepo)
-
-	bookRequest := book.BookRequest{
-		Title: "The Pragmatic Engineer",
-		Price: "50",
-	}
-
-	_, err = bookService.Create(bookRequest)
-	if err != nil {
-		fmt.Printf("error creating data: %v\n", err)
-	}
-
-	book, err := bookService.FindByID(14)
-	if err != nil {
-		fmt.Printf("error retrieving data: %v\n", err)
-	}
-
-	fmt.Printf("Title\t: %v\n", book.Title)
-
-	books, err := bookService.FindAll()
-	if err != nil {
-		fmt.Printf("error retrieving data: %v\n", err)
-	}
-
-	for _, book := range books {
-		fmt.Printf("Title\t: %v\n", book.Title)
-	}
+	bookHandler := handler.NewBookHandler(bookService)
 
 	router := gin.Default()
 
 	v1 := router.Group("/v1")
 
-	v1.GET("/", handler.RootHandler)
-	v1.GET("/hello", handler.HelloHandler)
-	v1.GET("/books/:id/:title", handler.BooksHandler)
-	v1.GET("/query", handler.QueryHandler)
+	v1.GET("/", bookHandler.RootHandler)
+	v1.GET("/hello", bookHandler.HelloHandler)
+	v1.GET("/books/:id/:title", bookHandler.BooksHandler)
+	v1.GET("/query", bookHandler.QueryHandler)
 
-	router.POST("/books", handler.PostBooksHandler)
+	v1.POST("/books", bookHandler.PostBooksHandler)
 
 	router.Run(":8888")
 }
