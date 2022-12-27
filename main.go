@@ -65,6 +65,12 @@ func main() {
 		fmt.Printf("error updating book record: %v\n", err)
 	}
 
+	// DELETE
+	err = db.Debug().Delete(&book).Error
+	if err != nil {
+		fmt.Printf("error deleting book record: %v\n", err)
+	}
+
 	router := gin.Default()
 
 	v1 := router.Group("/v1")
