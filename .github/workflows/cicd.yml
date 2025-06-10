@@ -18,7 +18,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.22'
+          go-version: "1.22"
 
       - name: Install Dependencies
         run: go mod tidy
@@ -29,7 +29,7 @@ jobs:
           go tool cover -func=coverage.out
 
   deploy:
-    name: Deploy to VPS 
+    name: Deploy to VPS
     runs-on: ubuntu-latest
     needs: [test]
     if: github.ref == 'refs/heads/main'
@@ -47,6 +47,7 @@ jobs:
           port: 22
           script: |
             echo "📦 Pulling latest code..."
+            sudo -i  # Login sebagai root (pastikan password/sudoers sudah dikonfigurasi)
             cd /root/pustaka-api || exit 1
             git pull origin main
 
