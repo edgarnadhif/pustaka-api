@@ -43,12 +43,15 @@ jobs:
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_PASSWORD }}
+          password: ${{ secrets.SERVER_PASSWORD }} # Ini untuk login SSH, bukan sudo
           port: 22
-          
+
           script: |
             echo "📦 Pulling latest code..."
-            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S bash <<'EOF'
+            # BARIS INI YANG DIPERBAIKI!
+            # Hapus 'echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S'
+            # Cukup panggil 'sudo bash <<'EOF'' karena user sudah NOPASSWD
+            sudo bash <<'EOF'
                 cd /root/pustaka-api
                 git pull origin main
                 go build -o app
