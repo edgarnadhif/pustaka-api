@@ -30,7 +30,14 @@ func main() {
 
 	router := gin.Default()
 
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": “Berhasil jir“,
+		})
+	})
+
 	v1 := router.Group("/v1")
+
 
 	v1.GET("/books", bookHandler.GetBooks)
 	v1.GET("/books/:id", bookHandler.GetBook)
