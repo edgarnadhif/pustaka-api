@@ -14,7 +14,7 @@ import (
 func main() {
 	config, err := utils.LoadConfig(".")
 	if err != nil {
-		log.Fatal("cannot load config %v", err)
+		log.Fatalf("cannot load config %v", err)
 	}
 
 	db, err := gorm.Open(postgres.Open(config.DSN), &gorm.Config{})
