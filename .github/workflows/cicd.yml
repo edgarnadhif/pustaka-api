@@ -45,6 +45,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
           port: 22
+          
           script: |
             echo "📦 Pulling latest code..."
             echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S bash <<'EOF'
