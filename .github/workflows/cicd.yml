@@ -47,13 +47,10 @@ jobs:
           port: 22
           script: |
             echo "📦 Pulling latest code..."
-            sudo -i  # Login sebagai root (pastikan password/sudoers sudah dikonfigurasi)
-            cd /root/pustaka-api || exit 1
-            git pull origin main
-
-            echo "🔧 Building app..."
-            go build -o app
-
-            echo "🚀 Restarting app..."
-            pkill app || true
-            nohup ./app > log.txt 2>&1 &
+            echo "${{ secrets.SERVER_PASSWORD }}" | sudo -S -i bash -c "
+                cd /root/pustaka-api
+                git pull origin main
+                go build -o app
+                pkill app || true
+                nohup ./app > log.txt 2>&1 &
+            "
