@@ -1,0 +1,58 @@
+name: Go CI/CD Pustaka API
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Run Tests & Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
+
+      - name: Install Dependencies
+        run: go mod tidy
+
+      - name: Run Unit Tests with Coverage
+        run: |
+          go test ./... -coverprofile=coverage.out
+          go tool cover -func=coverage.out
+
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          script: |
+            echo "📦 Pulling latest code..."
+            cd /root/pustaka-api || exit 1
+            git pull origin main
+
+            echo "🔧 Building app..."
+            go build -o app
+
+            echo "🚀 Restarting app..."
+            pkill app || true
+            nohup ./app > log.txt 2>&1 &
