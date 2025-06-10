@@ -46,9 +46,9 @@ jobs:
           port: 22
 
           script: |
-              echo "📦 Pulling latest code..."
-              cd /root/pustaka-api
-              git pull origin main
-              go build -o app
-              pkill app || true
-              nohup ./app > log.txt 2>&1 &
+            echo "📦 Pulling latest code..."
+            cd ~/pustaka-api
+            git pull origin main
+            go build -o app
+            pkill app || true
+            nohup ./app > log.txt 2>&1 &
