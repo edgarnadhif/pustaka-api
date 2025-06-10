@@ -48,7 +48,7 @@ jobs:
 
           script: |
             echo "📦 Pulling latest code..."
-            # Provide an empty string to sudo -S
+            # Provide an empty string to sudo 
             echo "" | sudo -S bash <<'EOF'
                 cd /root/pustaka-api
                 git pull origin main
