@@ -44,9 +44,8 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }} # Ini untuk login SSH, bukan sudo
           port: 22
-
           script: |
-            echo "📦 Pulling latest code..."
+            echo "📦 Pulling latest code...."
             cd ~/pustaka-api
             git pull origin main
             go build -o app
